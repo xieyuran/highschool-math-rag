@@ -3,7 +3,7 @@ import gradio as gr
 
 def chat(question):
     if not question or question.strip() == "":
-        return "请输入有效的高中数学问题～"
+        return "请输入有效的问题～"
 
     try:
         result = qa_chain.invoke({"question": question.strip()})
@@ -11,17 +11,17 @@ def chat(question):
     except Exception as e:
         return f"回答生成失败：{str(e)}\n请检查：1.Ollama是否启动 2.math.txt是否存在 3.qwen:0.5b模型是否下载"
 
-with gr.Blocks(title="高中数学RAG智能答疑系统", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="通用本地知识库问答系统", theme=gr.themes.Soft()) as demo:
     gr.Markdown("""
-    # 📘 高中数学RAG智能答疑系统
-    基于本地大模型（qwen:0.5b）+ 教材知识点检索，回答严谨、无幻觉
-    > 仅根据math.txt中的教材内容回答，不编造、不扩展
+    # 📚 通用本地知识库问答系统
+    基于 RAG 检索增强生成 + 本地大模型（qwen:0.5b），回答严谨、无幻觉、不编造
+    > 严格根据文档内容回答，不使用外部知识
     """)
 
     with gr.Row():
         question = gr.Textbox(
-            label="请输入你的高中数学问题",
-            placeholder="例如：什么是集合？充分条件和必要条件的区别？",
+            label="请输入你的问题",
+            placeholder="例如：文档里讲了什么内容？这个概念的定义是什么？",
             lines=3,
             scale=8
         )
@@ -30,14 +30,14 @@ with gr.Blocks(title="高中数学RAG智能答疑系统", theme=gr.themes.Soft()
     answer = gr.Textbox(
         label="AI回答",
         lines=8,
-        interactive=False  
+        interactive=False
     )
 
     submit_btn.click(
         fn=chat,
         inputs=question,
         outputs=answer,
-        show_progress="minimal"  
+        show_progress="minimal"
     )
 
     question.submit(
@@ -49,10 +49,10 @@ with gr.Blocks(title="高中数学RAG智能答疑系统", theme=gr.themes.Soft()
 
 if __name__ == "__main__":
     demo.launch(
-        server_port=7860,  
-        server_name="127.0.0.1", 
-        inbrowser=True, 
-        share=False,  
-        debug=True,  
-        show_error=True 
+        server_port=7680,
+        server_name="127.0.0.1",
+        inbrowser=True,
+        share=False,
+        debug=True,
+        show_error=True
     )
